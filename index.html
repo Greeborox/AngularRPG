@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>AngularJS Text RPG - JavaScript Noob - http://jsdn.pl/</title>
+    <link href='https://fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'>
+    <link href='/src/app/css/main.css' rel='stylesheet' type='text/css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
+    <!-- inject:js -->
+    <script src="/src/app/module.js"></script>
+    <script src="/src/app/rooms/roomService.js"></script>
+    <script src="/src/app/player/playerService.js"></script>
+    <script src="/src/app/main/mainService.js"></script>
+    <script src="/src/app/main/controller.js"></script>
+    <script src="/src/app/config.js"></script>
+    <!-- endinject -->
+  </head>
+    <body ng-app="textRPG">
+      <div>
+        <h1>ANGULAR RPG</h1>
+        <div id="mainView" ng-controller="mainController as main">
+          <div>
+            <p ng-repeat="msg in main.log track by $index">{{msg}}</p>
+          </div>
+          <input ng-disabled="main.checkDirection('north')" type="button" value="Go North" ng-click="main.walk('north')">
+          <input ng-disabled="main.checkDirection('south')" type="button" value="Go South" ng-click="main.walk('south')">
+          <input ng-disabled="main.checkDirection('east')" type="button" value="Go East" ng-click="main.walk('east')">
+          <input ng-disabled="main.checkDirection('west')" type="button" value="Go West" ng-click="main.walk('west')">
+        </div>
+        <div id="interface" ng-view>
+
+        </div>
+      </div>
+
+    </body>
+</html>
