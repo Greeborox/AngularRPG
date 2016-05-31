@@ -27,7 +27,8 @@ angular.module('textRPG').
       },
     }
 
-    this.walk = function(){
+    this.walk = function(direction){
+      this.direction = direction;
       this.performingAction = true;
       this.currentAction = 'walking';
     }

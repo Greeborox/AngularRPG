@@ -9,8 +9,7 @@ angular.module('textRPG')
 
     this.walk = function(direction){
       this.add("Walking "+direction+"...");
-      this.player.direction = direction;
-      this.player.walk();
+      this.player.walk(direction);
     }
 
     this.checkDirection = function(direction){
