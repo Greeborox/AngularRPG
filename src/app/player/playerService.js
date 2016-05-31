@@ -2,7 +2,7 @@ angular.module('textRPG').
   service('playerService', ['roomService', function(roomService) {
     // State vars
     var self = this;
-    this.currentLocation = 'forest';
+    this.currentLocation = 'start';
     this.direction = undefined;
     this.performingAction = false;
     this.currentAction = undefined;
@@ -25,12 +25,27 @@ angular.module('textRPG').
           self.currentActionTime += 1;
         }
       },
+      'attacking': function(){
+        if(self.currentActionTime >= 200){
+          self.performingAction = false;
+          self.currentAction = undefined;
+          self.currentActionTime = 0;
+        } else {
+          self.currentActionTime += 1;
+        }
+      },
     }
 
     this.walk = function(direction){
       this.direction = direction;
       this.performingAction = true;
       this.currentAction = 'walking';
+    }
+
+    this.attack = function(monster){
+      roomService.clearRoom(this.currentLocation,monster.name);
+      this.performingAction = true;
+      this.currentAction = 'attacking';
     }
 
     this.update = function(){
