@@ -7,6 +7,8 @@ angular.module('textRPG').
     this.performingAction = false;
     this.currentAction = undefined;
     this.dead = false;
+    this.attacking = undefined;
+    this.attackReady = false;
     this.currentActionTime = 0;
     // Attribute vars
     this.speed = 10;
@@ -27,6 +29,7 @@ angular.module('textRPG').
       },
       'attacking': function(){
         if(self.currentActionTime >= 200){
+          self.attackReady = true;
           self.performingAction = false;
           self.currentAction = undefined;
           self.currentActionTime = 0;
@@ -43,7 +46,8 @@ angular.module('textRPG').
     }
 
     this.attack = function(monster){
-      roomService.clearRoom(this.currentLocation,monster.name);
+      this.attacking = monster;
+      //roomService.clearRoom(this.currentLocation,monster.name);
       this.performingAction = true;
       this.currentAction = 'attacking';
     }
@@ -51,6 +55,10 @@ angular.module('textRPG').
     this.update = function(){
       if(this.performingAction){
         this.actions[this.currentAction]();
+      }
+      if(this.attackReady){
+        roomService.clearRoom(this.currentLocation,this.attacking.name);
+        self.attackReady = false;
       }
     }
 

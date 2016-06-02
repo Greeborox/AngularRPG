@@ -2,10 +2,8 @@ angular.module('textRPG').
   service('monstersService', function(){
 
     this.update = function(monsterList) {
-
       for (var i = 0; i < monsterList.length; i++) {
         var currMonster = monsterList[i];
-        console.log(currMonster.attacking);
         if(currMonster.lastAttack >= currMonster.attackTime){
           if(currMonster.attitude === 'aggresive'){
             currMonster.attacking = true;
@@ -34,7 +32,7 @@ angular.module('textRPG').
         this.maxHp = 15;
         this.hp = 15;
         this.attacking = false;
-        this.attitude = 'aggresive';
+        this.attitude = 'neutral';
         this.attackTime = 550;
         this.lastAttack = lastAttack;
       },

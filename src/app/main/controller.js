@@ -76,7 +76,6 @@ angular.module('textRPG')
 
     this.attack = function(monster){
       this.player.attack(monster);
-      this.add('You slay the '+monster.type+'!');
     }
 
     this.emmitMessage = function(){
@@ -98,6 +97,14 @@ angular.module('textRPG')
         }
         self.emmitMessage();
         self.roomService.setAnnounce(false);
+      }
+      if(self.roomService.getKillAnnounce()){
+        self.add('You slay the '+self.player.attacking.type+'!');
+        self.player.attacking = undefined;
+        if(!self.rooms[self.player.currentLocation].monsters.length == 0){
+          self.add(self.listMonsters());
+        }
+        self.roomService.setKillAnnounce(false);
       }
       if(self.player.dead){
         $interval.cancel(self.loop);
