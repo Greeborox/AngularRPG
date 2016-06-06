@@ -1,0 +1,7 @@
+<p>Your gold: {{ctrl.gold}}</p>
+<p>Items in your Backpack:</p>
+<ul id='inventory'>
+  <li ng-repeat="item in ctrl.inventory track by $index">
+    {{item.amount}} {{item.name}} <input ng-disabled="main.checkAction()" type="button" value="Use" ng-click=""> <input ng-disabled="main.checkAction()" type="button" value="Drop" ng-click="ctrl.drop(item.name)">
+  </li>
+</ul>

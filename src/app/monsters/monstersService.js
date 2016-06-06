@@ -15,6 +15,23 @@ angular.module('textRPG').
       }
     }
 
+    this.generateLoot = function(monster){
+      var lootArray = [];
+      for (var i = 0; i < this.monsterLoot[monster].length; i++) {
+        var currLootTable = this.monsterLoot[monster][i];
+        if(Math.random() < currLootTable.chance){
+          lootArray.push(currLootTable.item);
+        }
+      }
+      return lootArray;
+    }
+
+    this.monsterLoot = {
+      'goblin': [{'item':'Goblin Ear','chance':0.9},{'item':'Rock','chance':0.5}],
+      'troll': [{'item':'Troll Tooth','chance':0.5},{'item':'Health Potion','chance':0.5},{'item':'Warhammer','chance':0.3}],
+      'knight': [],
+    }
+
     this.monsters = {
       'goblin': function(name,lastAttack){
         this.name = name;

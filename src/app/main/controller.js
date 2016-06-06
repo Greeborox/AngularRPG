@@ -1,5 +1,5 @@
 angular.module('textRPG')
-  .controller('mainController', ['$interval','playerService','mainService', 'roomService', 'monstersService',function($interval, playerService, mainService, roomService, monstersService){
+  .controller('mainController', ['$interval','$location','playerService','mainService', 'roomService', 'monstersService',function($interval, $location, playerService, mainService, roomService, monstersService){
     var self = this;
     this.player = playerService;
     this.roomService = roomService;
@@ -7,6 +7,10 @@ angular.module('textRPG')
     this.log = mainService.log;
     this.add = mainService.addEntry;
     this.monsters = monstersService;
+
+    this.changeView = function(view){
+      $location.url("/"+view);
+    }
 
     this.walk = function(direction){
       this.add("Walking "+direction+"...");
@@ -52,8 +56,12 @@ angular.module('textRPG')
       return this.rooms[this.player.currentLocation].monsters;
     }
 
+    this.getCurrItems = function(){
+      return this.rooms[this.player.currentLocation].items;
+    }
+
     this.listMonsters = function(){
-      var monsterList = this.rooms[this.player.currentLocation].monsters;
+      var monsterList = this.getCurrMonsters();
       var presentMonstersMap = {};
       for (var i = 0; i < monsterList.length; i++) {
         if(presentMonstersMap[monsterList[i].type] === undefined){
@@ -74,13 +82,33 @@ angular.module('textRPG')
       return monsterText;
     }
 
+    this.listItems = function(){
+      var items = this.getCurrItems();
+      var itemsText = "There are following items here: ";
+      for (var i = 0; i < items.length; i++) {
+        itemsText += items[i];
+        if(i < items.length-1){
+          itemsText+= ", ";
+        }
+      }
+      return itemsText;
+    }
+
     this.attack = function(monster){
+      this.add("You attack the "+monster.type);
       this.player.attack(monster);
     }
 
+    this.pickUp = function(item){
+      this.player.pickUp(item);
+    }
+
     this.emmitMessage = function(){
-      if(!this.rooms[this.player.currentLocation].monsters.length == 0){
+      if(!this.getCurrMonsters().length == 0){
         this.add(this.listMonsters());
+      }
+      if(!this.getCurrItems().length == 0){
+        this.add(this.listItems());
       }
       this.add(this.rooms[this.player.currentLocation].description);
     }
@@ -105,6 +133,13 @@ angular.module('textRPG')
           self.add(self.listMonsters());
         }
         self.roomService.setKillAnnounce(false);
+      }
+      if(self.roomService.itemsDropped.length > 0){
+        for (var i = 0; i < self.roomService.itemsDropped.length; i++) {
+          self.rooms[self.player.currentLocation].items.push(self.roomService.itemsDropped[i])
+        }
+        //self.add(self.listLoot());
+        self.roomService.itemsDropped = [];
       }
       if(self.player.dead){
         $interval.cancel(self.loop);

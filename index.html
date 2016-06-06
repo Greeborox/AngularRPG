@@ -9,29 +9,48 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
     <!-- inject:js -->
     <script src="/src/app/module.js"></script>
+    <script src="/src/app/stats/statsCtrl.js"></script>
     <script src="/src/app/rooms/roomService.js"></script>
     <script src="/src/app/player/playerService.js"></script>
     <script src="/src/app/monsters/monstersService.js"></script>
     <script src="/src/app/main/mainService.js"></script>
     <script src="/src/app/main/controller.js"></script>
+    <script src="/src/app/items/itemService.js"></script>
+    <script src="/src/app/inventory/inventoryCtrl.js"></script>
+    <script src="/src/app/equipment/equipmentCtrl.js"></script>
     <script src="/src/app/config.js"></script>
     <!-- endinject -->
   </head>
     <body ng-app="textRPG">
-      <div>
+      <div ng-controller="mainController as main">
         <h1>ANGULAR RPG</h1>
-        <div id="mainView" ng-controller="mainController as main">
+        <div id="mainView">
           <div>
             <p ng-repeat="msg in main.log track by $index">{{msg}}</p>
           </div>
-          <input ng-disabled="main.checkDirection('west')" type="button" value="Go West" ng-click="main.walk('west')">
-          <input ng-disabled="main.checkDirection('north')" type="button" value="Go North" ng-click="main.walk('north')">
-          <input ng-disabled="main.checkDirection('east')" type="button" value="Go East" ng-click="main.walk('east')">
-          <input ng-disabled="main.checkDirection('south')" type="button" value="Go South" ng-click="main.walk('south')">
+          <table>
+            <tr>
+              <td></td><td><input ng-disabled="main.checkDirection('north')" type="button" value="Go North" ng-click="main.walk('north')"></td><td></td>
+            </tr>
+            <tr>
+              <td><input ng-disabled="main.checkDirection('west')" type="button" value="Go West" ng-click="main.walk('west')"></td><td></td><td><input ng-disabled="main.checkDirection('east')" type="button" value="Go East" ng-click="main.walk('east')"></td>
+            </tr>
+            <tr>
+              <td></td><td><input ng-disabled="main.checkDirection('south')" type="button" value="Go South" ng-click="main.walk('south')"></td><td></td>
+            </tr>
+          </table>
+          <p ng-hide="main.getCurrMonsters().length === 0">attack:</p>
           <input ng-disabled="main.checkAction()" ng-repeat="monster in main.getCurrMonsters() track by $index" type="button" value="Attack {{monster.type}}!" ng-click="main.attack(monster)">
+          <p ng-hide="main.getCurrItems().length === 0">items:</p>
+          <input ng-disabled="main.checkAction()" ng-repeat="item in main.getCurrItems() track by $index" type="button" value="Get {{item}}" ng-click="main.pickUp(item)">
         </div>
-        <div id="interface" ng-view>
+        <div>
+          <div id="interface" ng-view>
 
+          </div>
+          <input type="button" value="Stats" ng-click="main.changeView('player')">
+          <input type="button" value="Inventory" ng-click="main.changeView('inventory')">
+          <input type="button" value="Equiped" ng-click="main.changeView('equipment')">
         </div>
       </div>
     </body>

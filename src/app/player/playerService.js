@@ -1,5 +1,5 @@
 angular.module('textRPG').
-  service('playerService', ['roomService', function(roomService) {
+  service('playerService', ['roomService','mainService', function(roomService,mainService) {
     // State vars
     var self = this;
     this.currentLocation = 'start';
@@ -9,7 +9,20 @@ angular.module('textRPG').
     this.dead = false;
     this.attacking = undefined;
     this.attackReady = false;
+    this.droping = undefined;
+    this.dropingReady = false;
+    this.picking = undefined;
+    this.pickUpReady = false;
     this.currentActionTime = 0;
+
+    this.gold = 0;
+    this.inventory = {};
+    this.equiped = {
+      'weapon':'sword',
+      'armor':'leather',
+      'amulet': undefined,
+      'ring': undefined,
+    }
     // Attribute vars
     this.speed = 10;
 
@@ -37,6 +50,34 @@ angular.module('textRPG').
           self.currentActionTime += 1;
         }
       },
+      'picking': function(){
+        if(self.currentActionTime >= 50){
+          self.pickUpReady = true;
+          self.performingAction = false;
+          self.currentAction = undefined;
+          self.currentActionTime = 0;
+        } else {
+          self.currentActionTime += 1;
+        }
+      },
+      'droping': function(){
+        if(self.currentActionTime >= 30){
+          self.dropingReady = true;
+          self.performingAction = false;
+          self.currentAction = undefined;
+          self.currentActionTime = 0;
+        } else {
+          self.currentActionTime += 1;
+        }
+      },
+    }
+
+    this.has = function(item){
+      if(this.inventory[item]){
+        return true
+      } else {
+        return false
+      }
     }
 
     this.walk = function(direction){
@@ -47,9 +88,20 @@ angular.module('textRPG').
 
     this.attack = function(monster){
       this.attacking = monster;
-      //roomService.clearRoom(this.currentLocation,monster.name);
       this.performingAction = true;
       this.currentAction = 'attacking';
+    }
+
+    this.pickUp = function(item){
+      this.picking = item;
+      this.performingAction = true;
+      this.currentAction = 'picking';
+    }
+
+    this.drop = function(item){
+      this.droping = item;
+      this.performingAction = true;
+      this.currentAction = 'droping';
     }
 
     this.update = function(){
@@ -59,6 +111,22 @@ angular.module('textRPG').
       if(this.attackReady){
         roomService.clearRoom(this.currentLocation,this.attacking.name);
         self.attackReady = false;
+      }
+      if(this.dropingReady){
+        roomService.itemsDropped.push(self.droping);
+        mainService.addEntry("dropped "+self.droping);
+        self.dropingReady = false;
+      }
+      if(this.pickUpReady){
+        var item = this.picking
+        roomService.removeItem(this.currentLocation,item);
+        if(this.has(item)){
+          this.inventory[item].amount += 1;
+        } else {
+          this.inventory[item] = {'name':item,amount:1};
+        }
+        mainService.addEntry("picked up "+item);
+        self.pickUpReady = false;
       }
     }
 
