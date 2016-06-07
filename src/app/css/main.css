@@ -18,11 +18,15 @@ body {
   overflow-y: scroll;
 }
 
-#inventory input {
+#inventory, #equipment {
+  max-width: 300px;
+}
+
+#inventory input,#equipment input {
   float: right;
 }
 
-#inventory li {
+#inventory li, #equipment li {
   clear: both;
 }
 

@@ -64,7 +64,7 @@ angular.module('textRPG').
         'west': undefined,
         'encounters': [],
         'monsters': [],
-        'items': [],
+        'items': ['sword','sword'],
       },
       'forestPath': {
         'description': 'The forest is denser here. The rays of the sun fall through the treetops. For a second you see a fox watching you from the bushes on the east side. The path leads ahead to the north.',

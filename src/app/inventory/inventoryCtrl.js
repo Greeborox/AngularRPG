@@ -12,5 +12,9 @@ angular.module('textRPG')
         delete this.inventory[item];
       }
       this.player.drop(item);
+    };
+
+    this.use = function(item){
+      this.player.use(item);
     }
 }]);

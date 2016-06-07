@@ -1,1 +1,4 @@
-<p>Equiped items will be visible here.</p>
+<p>Equiped items:</p>
+<ul id="equipment">
+  <li ng-repeat="(spot, eq) in ctrl.equipment">{{spot}} : {{eq}}<span ng-hide="ctrl.hasEquiped(spot)">empty</span><input ng-disabled="main.checkAction()" ng-show="ctrl.hasEquiped(spot)" type="button" value="Unequip" ng-click="ctrl.unequip(spot)"></li>
+</ul>

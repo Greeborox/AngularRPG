@@ -1,7 +1,8 @@
 angular.module('textRPG').
-  service('playerService', ['roomService','mainService', function(roomService,mainService) {
+  service('playerService', ['roomService','mainService','itemsService', function(roomService,mainService,itemsService) {
     // State vars
     var self = this;
+    this.items = itemsService.items;
     this.currentLocation = 'start';
     this.direction = undefined;
     this.performingAction = false;
@@ -13,13 +14,17 @@ angular.module('textRPG').
     this.dropingReady = false;
     this.picking = undefined;
     this.pickUpReady = false;
+    this.unequiping = undefined;
+    this.unequipingReady = false;
+    this.using = undefined;
+    this.usingReady = false;
     this.currentActionTime = 0;
 
     this.gold = 0;
     this.inventory = {};
     this.equiped = {
       'weapon':'sword',
-      'armor':'leather',
+      'armor':'leather armour',
       'amulet': undefined,
       'ring': undefined,
     }
@@ -70,6 +75,26 @@ angular.module('textRPG').
           self.currentActionTime += 1;
         }
       },
+      'unequiping': function(){
+        if(self.currentActionTime >= 30){
+          self.unequipingReady = true;
+          self.performingAction = false;
+          self.currentAction = undefined;
+          self.currentActionTime = 0;
+        } else {
+          self.currentActionTime += 1;
+        }
+      },
+      'using': function(){
+        if(self.currentActionTime >= 30){
+          self.usingReady = true;
+          self.performingAction = false;
+          self.currentAction = undefined;
+          self.currentActionTime = 0;
+        } else {
+          self.currentActionTime += 1;
+        }
+      },
     }
 
     this.has = function(item){
@@ -104,6 +129,18 @@ angular.module('textRPG').
       this.currentAction = 'droping';
     }
 
+    this.unequip = function(spot){
+      this.unequiping = spot;
+      this.performingAction = true;
+      this.currentAction = 'unequiping';
+    }
+
+    this.use = function(item){
+      this.using = item;
+      this.performingAction = true;
+      this.currentAction = 'using';
+    }
+
     this.update = function(){
       if(this.performingAction){
         this.actions[this.currentAction]();
@@ -127,6 +164,34 @@ angular.module('textRPG').
         }
         mainService.addEntry("picked up "+item);
         self.pickUpReady = false;
+      }
+      if(this.unequipingReady){
+        var item = this.equiped[this.unequiping];
+        if(this.has(item)){
+          this.inventory[item].amount += 1;
+        } else {
+          this.inventory[item] = {'name':item,amount:1};
+        }
+        mainService.addEntry("uneqiped " + item);
+        this.equiped[this.unequiping] = undefined;
+        self.unequipingReady = false;
+      }
+      if(this.usingReady){
+        var item = this.using;
+        var spot = this.items[item].spot
+        if(this.items[item].type = 'equipment'){
+          if(this.equiped[spot] === undefined){
+            this.equiped[spot] = item;
+            mainService.addEntry("equiped " + item);
+          } else {
+            mainService.addEntry("cannot equip " + item);
+
+            /////////////////////////// REMOVE ITEM FROM INVENTORY
+          }
+        } else {
+          mainService.addEntry('using '+ item);
+        }
+        self.usingReady = false;
       }
     }
 
