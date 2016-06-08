@@ -1,6 +1,8 @@
 angular.module('textRPG').
   service('monstersService', function(){
 
+    this.uniqesKilled = {};
+
     this.update = function(monsterList) {
       for (var i = 0; i < monsterList.length; i++) {
         var currMonster = monsterList[i];
@@ -27,8 +29,9 @@ angular.module('textRPG').
     }
 
     this.monsterLoot = {
-      'goblin': [{'item':'Goblin Ear','chance':0.9},{'item':'Rock','chance':0.5}],
-      'troll': [{'item':'Troll Tooth','chance':0.5},{'item':'Health Potion','chance':0.5},{'item':'Warhammer','chance':0.3}],
+      'goblin': [{'item':'goblin ear','chance':0.9},{'item':'rock','chance':0.5}],
+      'rusalka': [{'item':'golden key','chance':1}],
+      'troll': [{'item':'troll tooth','chance':0.5},{'item':'health potion','chance':0.5},{'item':'warhammer','chance':0.3}],
       'knight': [],
     }
 
@@ -41,7 +44,18 @@ angular.module('textRPG').
         this.attacking = false;
         this.attitude = 'aggresive';
         this.attackTime = 300;
-        this.lastAttack = lastAttack;
+        this.lastAttack = lastAttack || 0;
+      },
+      'rusalka': function(name,lastAttack){
+        this.name = name;
+        this.type = 'rusalka';
+        this.unique = true;
+        this.maxHp = 8;
+        this.hp = 8;
+        this.attacking = false;
+        this.attitude = 'aggresive';
+        this.attackTime = 150;
+        this.lastAttack = lastAttack || 0;
       },
       'troll': function(name,lastAttack){
         this.name = name;
@@ -51,7 +65,7 @@ angular.module('textRPG').
         this.attacking = false;
         this.attitude = 'neutral';
         this.attackTime = 550;
-        this.lastAttack = lastAttack;
+        this.lastAttack = lastAttack || 0;
       },
       'knight': function(name,lastAttack){
         this.name = name;
@@ -61,7 +75,7 @@ angular.module('textRPG').
         this.attacking = false;
         this.attitude = 'friendly';
         this.attackTime = 300;
-        this.lastAttack = lastAttack;
+        this.lastAttack = lastAttack || 0;
       },
     }
   })

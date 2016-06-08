@@ -141,6 +141,17 @@ angular.module('textRPG')
         //self.add(self.listLoot());
         self.roomService.itemsDropped = [];
       }
+      if(self.player.itemsToRemove.length > 0){
+        for (var i = 0; i < self.player.itemsToRemove.length; i++) {
+          var item = self.player.itemsToRemove[i];
+          if(self.player.inventory[item].amount > 1){
+            self.player.inventory[item].amount -= 1;
+          } else {
+            delete self.player.inventory[item];
+          }
+        }
+        self.player.itemsToRemove = [];
+      }
       if(self.player.dead){
         $interval.cancel(self.loop);
       }

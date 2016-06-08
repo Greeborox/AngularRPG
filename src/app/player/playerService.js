@@ -19,6 +19,7 @@ angular.module('textRPG').
     this.using = undefined;
     this.usingReady = false;
     this.currentActionTime = 0;
+    this.itemsToRemove = [];
 
     this.gold = 0;
     this.inventory = {};
@@ -179,17 +180,31 @@ angular.module('textRPG').
       if(this.usingReady){
         var item = this.using;
         var spot = this.items[item].spot
-        if(this.items[item].type = 'equipment'){
+        if(this.items[item].type === 'equipment'){
           if(this.equiped[spot] === undefined){
             this.equiped[spot] = item;
             mainService.addEntry("equiped " + item);
+            this.itemsToRemove.push(item);
           } else {
             mainService.addEntry("cannot equip " + item);
-
-            /////////////////////////// REMOVE ITEM FROM INVENTORY
           }
         } else {
-          mainService.addEntry('using '+ item);
+          if(this.items[item].usableAt === 'all'){
+            if(this.items[item].oneTime){
+              this.itemsToRemove.push(item);
+            }
+            this.items[item].useFunc();
+          } else {
+            var room = this.currentLocation;
+            if(room === this.items[item].usableAt) {
+              if(this.items[item].oneTime){
+                this.itemsToRemove.push(item);
+              }
+              this.items[item].useFunc();
+            } else {
+              this.items[item].badUseFunc();
+            }
+          }
         }
         self.usingReady = false;
       }

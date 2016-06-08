@@ -26,10 +26,12 @@ angular.module('textRPG').
       if(currRoom.encounters.length > 0){
         for (var i = 0; i < currRoom.encounters.length; i++) {
           var currEncounter = currRoom.encounters[i];
-          if(Math.random() < currEncounter.chance){
-            var monsterNum = Math.floor(Math.random() * (currEncounter.max - currEncounter.min) + currEncounter.min);
-            for (var j = 0; j < monsterNum; j++) {
-              this.rooms[room].monsters.push(new monstersService.monsters[currEncounter.type](currEncounter.type+j,75*j));
+          if(!currEncounter.unique || (currEncounter.unique && !monstersService.uniqesKilled[currEncounter.type])){
+            if(Math.random() < currEncounter.chance){
+              var monsterNum = Math.floor(Math.random() * (currEncounter.max - currEncounter.min) + currEncounter.min);
+              for (var j = 0; j < monsterNum; j++) {
+                this.rooms[room].monsters.push(new monstersService.monsters[currEncounter.type](currEncounter.type+j,75*j));
+              }
             }
           }
         }
@@ -43,6 +45,11 @@ angular.module('textRPG').
           this.rooms[room].monsters.splice(i,1);
           this.announceKill = true;
           this.itemsDropped = monstersService.generateLoot(currMonster.type);
+          if(currMonster.unique){
+            var monsterType = currMonster.type;
+            console.log("killed uniqe monster");
+            monstersService.uniqesKilled[monsterType] = true;
+          }
           console.log(currMonster.type);
           console.log(this.itemsDropped);
         }
@@ -64,7 +71,7 @@ angular.module('textRPG').
         'west': undefined,
         'encounters': [],
         'monsters': [],
-        'items': ['sword','sword'],
+        'items': [],
       },
       'forestPath': {
         'description': 'The forest is denser here. The rays of the sun fall through the treetops. For a second you see a fox watching you from the bushes on the east side. The path leads ahead to the north.',
@@ -74,7 +81,7 @@ angular.module('textRPG').
         'west': 'deepForest',
         'encounters': [],
         'monsters': [],
-        'items': ['Magic Ring','Health Potion'],
+        'items': ['magic ring','health potion'],
       },
       'foxDen': {
         'description': 'You enter a small groove. You can see a family of foxes playing in the grass. The hide quickly under a giant tree, the second the notice you',
@@ -202,7 +209,7 @@ angular.module('textRPG').
         'east': undefined,
         'south': undefined,
         'west': 'genericSwamp',
-        'encounters': [],
+        'encounters': [{'type':'rusalka','chance':1,'min':1,'max':1,'unique':true}],
         'monsters': [],
         'items': [],
       },
@@ -227,12 +234,22 @@ angular.module('textRPG').
         'items': [],
       },
       'caveEntrance': {
-        'description': 'The road leads up. You climb the rocky path and reach a big cave. Bones and rusty equipment lies scatterd around here. Dark smoke is coming out of the entrance',
+        'description': 'The road leads up. You climb the rocky path and reach a big cave. Bones and rusty equipment lies scatterd around here. Dark smoke is coming out of the entrance. A heavy iron gate bars the entrance. The gate is locked with a golden padlock.',
         'north': undefined,
         'east': undefined,
         'south': 'swampEnd',
         'west': undefined,
         'encounters': [{'type':'troll','chance':0.7,'min':1,'max':3}],
+        'monsters': [],
+        'items': [],
+      },
+      'trollCave': {
+        'description': 'You enter a huge cave. There is a big fire in the middle. The whole place smells of troll. Disgusting.',
+        'north': undefined,
+        'east': undefined,
+        'south': 'caveEntrance',
+        'west': undefined,
+        'encounters': [{'type':'troll','chance':0.7,'min':2,'max':5}],
         'monsters': [],
         'items': [],
       },
