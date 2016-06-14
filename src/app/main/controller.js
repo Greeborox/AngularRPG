@@ -1,12 +1,22 @@
 angular.module('textRPG')
-  .controller('mainController', ['$interval','$location','playerService','mainService', 'roomService', 'monstersService',function($interval, $location, playerService, mainService, roomService, monstersService){
+  .controller('mainController', ['$interval','$location','$window' ,'playerService','mainService', 'roomService', 'monstersService','itemsService',function($interval, $location, $window,  playerService, mainService, roomService, monstersService, itemsService){
     var self = this;
     this.player = playerService;
     this.roomService = roomService;
     this.rooms = roomService.rooms;
     this.log = mainService.log;
     this.add = mainService.addEntry;
+    this.mainService = mainService;
     this.monsters = monstersService;
+    this.actionBarLength = 0;
+
+    this.actionBar = {
+      width: this.actionBarLength+"px",
+    }
+
+    this.reload = function() {
+      $window.location.reload();
+    }
 
     this.changeView = function(view){
       $location.url("/"+view);
@@ -46,8 +56,10 @@ angular.module('textRPG')
       for (var i = 0; i < monsterList.length; i++) {
         var currMonster = monsterList[i];
         if(currMonster.attacking){
-          this.add(currMonster.type+' is attacking!');
+          var monsterDmg = Math.floor(Math.random() * (currMonster.maxDmg - currMonster.minDmg) + currMonster.minDmg);
+          this.add(currMonster.type+' is attacking! It deals '+monsterDmg+ ' damage ('+itemsService.items[this.player.equiped.armor].defence+' absorbed by '+this.player.equiped.armor+')');
           currMonster.attacking = false;
+          this.player.hp -= (monsterDmg - itemsService.items[this.player.equiped.armor].defence);
         }
       }
     }
@@ -115,6 +127,12 @@ angular.module('textRPG')
 
     this.update = function(){
       self.player.update();
+      if(self.mainService.toHealPlayer){
+        self.player.hp = self.player.maxHp;
+        self.mainService.toHealPlayer = false;
+      }
+      self.actionBarLength = (self.player.currentActionTime/self.player.currActionLength)*100;
+      self.actionBar = {width: self.actionBarLength+"px"}
       if(self.rooms[self.player.currentLocation].monsters.length != 0){
         self.monsters.update(self.rooms[self.player.currentLocation].monsters);
         self.checkAttackers();

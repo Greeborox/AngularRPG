@@ -1,1 +1,8 @@
-<p>Player Stats will be visible here.</p>
+<ul>
+  <li>Level: {{ctrl.player.level}}</li>
+  <li>Health Points: {{ctrl.player.hp}} / {{ctrl.player.maxHp}}</li>
+  <li>Damage: {{ctrl.items[ctrl.player.equiped.weapon].minDmg}} - {{ctrl.items[ctrl.player.equiped.weapon].maxDmg}}</li>
+  <li>Attack Speed: {{ctrl.items[ctrl.player.equiped.weapon].speed}}</li>
+  <li>Strength Bonus: {{ctrl.player.strength/10}}</li>
+  <li>Damage Absorption: {{ctrl.items[ctrl.player.equiped.armor].defence}}</li>
+</ul>

@@ -1,5 +1,5 @@
 angular.module('textRPG').
-  service('itemsService', ['roomService','mainService', function(roomService,mainService){
+  service('itemsService', ['roomService', 'mainService', function(roomService,mainService){
     this.items = {
       'sword': {
         'type': 'equipment',
@@ -10,6 +10,9 @@ angular.module('textRPG').
         'badUseText': undefined,
         'useFunc': undefined,
         'baduseFunc': undefined,
+        'speed': 200,
+        'maxDmg': 8,
+        'minDmg': 2,
       },
       'warhammer': {
         'type': 'equipment',
@@ -20,6 +23,22 @@ angular.module('textRPG').
         'badUseText': undefined,
         'useFunc': undefined,
         'baduseFunc': undefined,
+        'speed': 300,
+        'maxDmg': 14,
+        'minDmg': 7,
+      },
+      'dagger': {
+        'type': 'equipment',
+        'spot': 'weapon',
+        'usableAt': undefined,
+        'oneTime': false,
+        'useText': undefined,
+        'badUseText': undefined,
+        'useFunc': undefined,
+        'baduseFunc': undefined,
+        'speed': 100,
+        'maxDmg': 4,
+        'minDmg': 1,
       },
       'leather armour' : {
         'type': 'equipment',
@@ -30,6 +49,7 @@ angular.module('textRPG').
         'badUseText': undefined,
         'useFunc': undefined,
         'baduseFunc': undefined,
+        'defence': 2,
       },
       'magic ring' : {
         'type': 'equipment',
@@ -40,16 +60,18 @@ angular.module('textRPG').
         'badUseText': undefined,
         'useFunc': undefined,
         'baduseFunc': undefined,
+        'defense': 1,
       },
       'health potion' : {
         'type': 'special',
         'spot': undefined,
         'usableAt': 'all',
         'oneTime': true,
-        'useText': 'You drink the potion.',
+        'useText': 'You drink the potion. You feel much better',
         'badUseText': undefined,
         'useFunc': function(){
           mainService.addEntry(this.useText);
+          mainService.healPlayer();
         },
         'badUseFunc': undefined,
       },

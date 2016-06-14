@@ -38,20 +38,29 @@ angular.module('textRPG').
       }
     }
 
-    this.clearRoom = function(room,name){
+    this.clearRoom = function(room){
       for (var i = 0; i < this.rooms[room].monsters.length; i++) {
         var currMonster = this.rooms[room].monsters[i];
-        if(currMonster.name === name){
+        if(currMonster.hp === 0){
           this.rooms[room].monsters.splice(i,1);
           this.announceKill = true;
           this.itemsDropped = monstersService.generateLoot(currMonster.type);
           if(currMonster.unique){
             var monsterType = currMonster.type;
-            console.log("killed uniqe monster");
             monstersService.uniqesKilled[monsterType] = true;
           }
-          console.log(currMonster.type);
-          console.log(this.itemsDropped);
+        }
+      }
+    }
+
+    this.hurtMonster = function(dmg,room,name){
+      for (var i = 0; i < this.rooms[room].monsters.length; i++) {
+        var currMonster = this.rooms[room].monsters[i];
+        if(currMonster.name === name){
+          currMonster.hp -= dmg;
+          if(currMonster.hp < 0){
+            currMonster.hp = 0;
+          }
         }
       }
     }

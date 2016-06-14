@@ -24,33 +24,40 @@
     <body ng-app="textRPG">
       <div ng-controller="mainController as main">
         <h1>ANGULAR RPG</h1>
-        <div id="mainView">
+        <div ng-show="main.player.hp>0">
+          <div id="mainView">
+            <div>
+              <p ng-repeat="msg in main.log track by $index">{{msg}}</p>
+            </div>
+            <div ng-style="main.actionBar" id="actionBar"></div>
+            <table>
+              <tr>
+                <td></td><td><input ng-disabled="main.checkDirection('north')" type="button" value="Go North" ng-click="main.walk('north')"></td><td></td>
+              </tr>
+              <tr>
+                <td><input ng-disabled="main.checkDirection('west')" type="button" value="Go West" ng-click="main.walk('west')"></td><td></td><td><input ng-disabled="main.checkDirection('east')" type="button" value="Go East" ng-click="main.walk('east')"></td>
+              </tr>
+              <tr>
+                <td></td><td><input ng-disabled="main.checkDirection('south')" type="button" value="Go South" ng-click="main.walk('south')"></td><td></td>
+              </tr>
+            </table>
+            <p ng-hide="main.getCurrMonsters().length === 0">attack:</p>
+            <input ng-disabled="main.checkAction()" ng-repeat="monster in main.getCurrMonsters() track by $index" type="button" value="Attack {{monster.type}}! ({{monster.hp}}/{{monster.maxHp}})" ng-click="main.attack(monster)">
+            <p ng-hide="main.getCurrItems().length === 0">items:</p>
+            <input ng-disabled="main.checkAction()" ng-repeat="item in main.getCurrItems() track by $index" type="button" value="Get {{item}}" ng-click="main.pickUp(item)">
+          </div>
           <div>
-            <p ng-repeat="msg in main.log track by $index">{{msg}}</p>
-          </div>
-          <table>
-            <tr>
-              <td></td><td><input ng-disabled="main.checkDirection('north')" type="button" value="Go North" ng-click="main.walk('north')"></td><td></td>
-            </tr>
-            <tr>
-              <td><input ng-disabled="main.checkDirection('west')" type="button" value="Go West" ng-click="main.walk('west')"></td><td></td><td><input ng-disabled="main.checkDirection('east')" type="button" value="Go East" ng-click="main.walk('east')"></td>
-            </tr>
-            <tr>
-              <td></td><td><input ng-disabled="main.checkDirection('south')" type="button" value="Go South" ng-click="main.walk('south')"></td><td></td>
-            </tr>
-          </table>
-          <p ng-hide="main.getCurrMonsters().length === 0">attack:</p>
-          <input ng-disabled="main.checkAction()" ng-repeat="monster in main.getCurrMonsters() track by $index" type="button" value="Attack {{monster.type}}!" ng-click="main.attack(monster)">
-          <p ng-hide="main.getCurrItems().length === 0">items:</p>
-          <input ng-disabled="main.checkAction()" ng-repeat="item in main.getCurrItems() track by $index" type="button" value="Get {{item}}" ng-click="main.pickUp(item)">
-        </div>
-        <div>
-          <div id="interface" ng-view>
+            <div id="interface" ng-view>
 
+            </div>
+            <input type="button" value="Stats" ng-click="main.changeView('player')">
+            <input type="button" value="Inventory" ng-click="main.changeView('inventory')">
+            <input type="button" value="Equiped" ng-click="main.changeView('equipment')">
           </div>
-          <input type="button" value="Stats" ng-click="main.changeView('player')">
-          <input type="button" value="Inventory" ng-click="main.changeView('inventory')">
-          <input type="button" value="Equiped" ng-click="main.changeView('equipment')">
+        </div>
+        <div ng-show="main.player.hp<=0">
+          <p>you are dead</p>
+          <input type="button" value="Restart" ng-click="main.reload()">
         </div>
       </div>
     </body>

@@ -41,6 +41,8 @@ angular.module('textRPG').
         this.type = 'goblin';
         this.maxHp = 4;
         this.hp = 4;
+        this.maxDmg = 5;
+        this.minDmg = 2;
         this.attacking = false;
         this.attitude = 'aggresive';
         this.attackTime = 300;
@@ -52,6 +54,8 @@ angular.module('textRPG').
         this.unique = true;
         this.maxHp = 8;
         this.hp = 8;
+        this.maxDmg = 8;
+        this.minDmg = 2;
         this.attacking = false;
         this.attitude = 'aggresive';
         this.attackTime = 150;
@@ -62,6 +66,8 @@ angular.module('textRPG').
         this.type = 'troll';
         this.maxHp = 15;
         this.hp = 15;
+        this.maxDmg = 10;
+        this.minDmg = 5;
         this.attacking = false;
         this.attitude = 'neutral';
         this.attackTime = 550;
@@ -72,6 +78,8 @@ angular.module('textRPG').
         this.type = 'knight';
         this.maxHp = 10;
         this.hp = 10;
+        this.maxDmg = 8;
+        this.minDmg = 5;
         this.attacking = false;
         this.attitude = 'friendly';
         this.attackTime = 300;

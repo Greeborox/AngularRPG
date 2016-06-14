@@ -35,6 +35,12 @@ body {
   overflow-y: scroll;
 }
 
+div#actionBar {
+  width: 100px;
+  height: 20px;
+  background: #00D100;
+}
+
 ::-webkit-scrollbar
 {
   width: 12px;  /* for vertical scrollbars */

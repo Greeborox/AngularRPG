@@ -2,6 +2,10 @@ angular.module('textRPG').
   service('playerService', ['roomService','mainService','itemsService', function(roomService,mainService,itemsService) {
     // State vars
     var self = this;
+    this.level = 1;
+    this.hp = 10;
+    this.maxHp = 10;
+    this.strength = 10;
     this.items = itemsService.items;
     this.currentLocation = 'start';
     this.direction = undefined;
@@ -19,12 +23,13 @@ angular.module('textRPG').
     this.using = undefined;
     this.usingReady = false;
     this.currentActionTime = 0;
+    this.currActionLength = 100;
     this.itemsToRemove = [];
 
     this.gold = 0;
     this.inventory = {};
     this.equiped = {
-      'weapon':'sword',
+      'weapon':'dagger',
       'armor':'leather armour',
       'amulet': undefined,
       'ring': undefined,
@@ -35,7 +40,7 @@ angular.module('textRPG').
     //actions
     this.actions = {
       'walking': function(){
-        if(self.currentActionTime >= 100){
+        if(self.currentActionTime >= self.currActionLength){
           self.currentLocation = roomService.rooms[self.currentLocation][self.direction];
           roomService.setAnnounce(true);
           self.direction = undefined;
@@ -47,7 +52,7 @@ angular.module('textRPG').
         }
       },
       'attacking': function(){
-        if(self.currentActionTime >= 200){
+        if(self.currentActionTime >= self.currActionLength){
           self.attackReady = true;
           self.performingAction = false;
           self.currentAction = undefined;
@@ -57,7 +62,7 @@ angular.module('textRPG').
         }
       },
       'picking': function(){
-        if(self.currentActionTime >= 50){
+        if(self.currentActionTime >= self.currActionLength){
           self.pickUpReady = true;
           self.performingAction = false;
           self.currentAction = undefined;
@@ -67,7 +72,7 @@ angular.module('textRPG').
         }
       },
       'droping': function(){
-        if(self.currentActionTime >= 30){
+        if(self.currentActionTime >= self.currActionLength){
           self.dropingReady = true;
           self.performingAction = false;
           self.currentAction = undefined;
@@ -77,7 +82,7 @@ angular.module('textRPG').
         }
       },
       'unequiping': function(){
-        if(self.currentActionTime >= 30){
+        if(self.currentActionTime >= self.currActionLength){
           self.unequipingReady = true;
           self.performingAction = false;
           self.currentAction = undefined;
@@ -87,7 +92,7 @@ angular.module('textRPG').
         }
       },
       'using': function(){
-        if(self.currentActionTime >= 30){
+        if(self.currentActionTime >= self.currActionLength){
           self.usingReady = true;
           self.performingAction = false;
           self.currentAction = undefined;
@@ -106,37 +111,50 @@ angular.module('textRPG').
       }
     }
 
+    this.attackMonster = function(name,type){
+      var dmg = Math.floor(Math.random() * (this.items[this.equiped.weapon].maxDmg - this.items[this.equiped.weapon].minDmg) + this.items[this.equiped.weapon].minDmg);
+      mainService.addEntry("You deal "+dmg+" damage to the "+(type));
+      roomService.hurtMonster(dmg,this.currentLocation,this.attacking.name);
+      console.log(dmg);
+    }
+
     this.walk = function(direction){
+      this.currActionLength = 100;
       this.direction = direction;
       this.performingAction = true;
       this.currentAction = 'walking';
     }
 
     this.attack = function(monster){
+      this.currActionLength = this.items[this.equiped.weapon].speed;
       this.attacking = monster;
       this.performingAction = true;
       this.currentAction = 'attacking';
     }
 
     this.pickUp = function(item){
+      this.currActionLength = 50;
       this.picking = item;
       this.performingAction = true;
       this.currentAction = 'picking';
     }
 
     this.drop = function(item){
+      this.currActionLength = 30;
       this.droping = item;
       this.performingAction = true;
       this.currentAction = 'droping';
     }
 
     this.unequip = function(spot){
+      this.currActionLength = 30;
       this.unequiping = spot;
       this.performingAction = true;
       this.currentAction = 'unequiping';
     }
 
     this.use = function(item){
+      this.currActionLength = 30;
       this.using = item;
       this.performingAction = true;
       this.currentAction = 'using';
@@ -147,7 +165,8 @@ angular.module('textRPG').
         this.actions[this.currentAction]();
       }
       if(this.attackReady){
-        roomService.clearRoom(this.currentLocation,this.attacking.name);
+        self.attackMonster(this.attacking.name,this.attacking.type);
+        roomService.clearRoom(this.currentLocation);
         self.attackReady = false;
       }
       if(this.dropingReady){
