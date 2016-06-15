@@ -4,6 +4,7 @@ angular.module('textRPG').
     this.announceRoom = true;
     this.announceKill = false;
     this.itemsDropped = [];
+    this.goldDropped = 0;
 
     this.setAnnounce = function (bool){
       this.announceRoom = bool;
@@ -45,6 +46,7 @@ angular.module('textRPG').
           this.rooms[room].monsters.splice(i,1);
           this.announceKill = true;
           this.itemsDropped = monstersService.generateLoot(currMonster.type);
+          this.goldDropped = monstersService.generateGold(currMonster.type)
           if(currMonster.unique){
             var monsterType = currMonster.type;
             monstersService.uniqesKilled[monsterType] = true;
@@ -131,6 +133,8 @@ angular.module('textRPG').
         'encounters': [],
         'monsters': [],
         'items': [],
+        'isShop': true,
+        'forSale': ['sword','health potion']
       },
       'forestPathEnd': {
         'description': 'The path continues to the east, but it is very clear it has not been used for a while. It seems very few people travel here. You can hear frogs in the distance.',

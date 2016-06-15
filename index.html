@@ -45,6 +45,12 @@
             <input ng-disabled="main.checkAction()" ng-repeat="monster in main.getCurrMonsters() track by $index" type="button" value="Attack {{monster.type}}! ({{monster.hp}}/{{monster.maxHp}})" ng-click="main.attack(monster)">
             <p ng-hide="main.getCurrItems().length === 0">items:</p>
             <input ng-disabled="main.checkAction()" ng-repeat="item in main.getCurrItems() track by $index" type="button" value="Get {{item}}" ng-click="main.pickUp(item)">
+            <div id="shop" ng-hide="main.inAShop()">
+              <p>buy:</p>
+              <input ng-disabled="main.cannotAfford(item)" type="button" value="{{item}} / {{main.getHighPrice(item)}}" ng-repeat="item in main.getForSale() track by $index" ng-click="main.buy(item)">
+              <p ng-hide="main.inventoryNotEmpty()">sell:</p>
+              <input ng-hide="main.inventoryNotEmpty()" type="button" value="{{item.name}} / {{main.getPrice(item.name)}}" ng-repeat="item in main.player.inventory track by $index" ng-click="main.sell(item.name)"">
+            </div>
           </div>
           <div>
             <div id="interface" ng-view>

@@ -28,11 +28,27 @@ angular.module('textRPG').
       return lootArray;
     }
 
+    this.generateGold = function(monster){
+      var gold = 0;
+      var currGold = this.monsterGold[monster];
+      if(Math.random() < currGold.chance){
+        var gold = Math.floor(Math.random() * (currGold.max - currGold.min) + currGold.min);
+      }
+      return gold;
+    }
+
     this.monsterLoot = {
       'goblin': [{'item':'goblin ear','chance':0.9},{'item':'rock','chance':0.5}],
       'rusalka': [{'item':'golden key','chance':1}],
       'troll': [{'item':'troll tooth','chance':0.5},{'item':'health potion','chance':0.5},{'item':'warhammer','chance':0.3}],
       'knight': [],
+    }
+
+    this.monsterGold = {
+      'goblin': {'chance':0.4,'min': 3, 'max': 10},
+      'rusalka': {'chance':1,'min': 15, 'max': 40},
+      'troll': {'chance':0.3,'min': 1, 'max': 20},
+      'knight': {'chance':0.3,'min': 1, 'max': 20},
     }
 
     this.monsters = {

@@ -35,6 +35,11 @@ body {
   overflow-y: scroll;
 }
 
+div#shop {
+  height: auto;
+  overflow: hidden;
+}
+
 div#actionBar {
   width: 100px;
   height: 20px;

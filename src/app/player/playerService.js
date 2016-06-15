@@ -26,7 +26,7 @@ angular.module('textRPG').
     this.currActionLength = 100;
     this.itemsToRemove = [];
 
-    this.gold = 0;
+    this.gold = {'amount':10};
     this.inventory = {};
     this.equiped = {
       'weapon':'dagger',

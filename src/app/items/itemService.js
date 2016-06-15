@@ -13,6 +13,7 @@ angular.module('textRPG').
         'speed': 200,
         'maxDmg': 8,
         'minDmg': 2,
+        'price': 150,
       },
       'warhammer': {
         'type': 'equipment',
@@ -26,6 +27,7 @@ angular.module('textRPG').
         'speed': 300,
         'maxDmg': 14,
         'minDmg': 7,
+        'price': 1200,
       },
       'dagger': {
         'type': 'equipment',
@@ -39,6 +41,7 @@ angular.module('textRPG').
         'speed': 100,
         'maxDmg': 4,
         'minDmg': 1,
+        'price': 50,
       },
       'leather armour' : {
         'type': 'equipment',
@@ -50,6 +53,7 @@ angular.module('textRPG').
         'useFunc': undefined,
         'baduseFunc': undefined,
         'defence': 2,
+        'price': 20,
       },
       'magic ring' : {
         'type': 'equipment',
@@ -61,6 +65,7 @@ angular.module('textRPG').
         'useFunc': undefined,
         'baduseFunc': undefined,
         'defense': 1,
+        'price': 50,
       },
       'health potion' : {
         'type': 'special',
@@ -74,6 +79,7 @@ angular.module('textRPG').
           mainService.healPlayer();
         },
         'badUseFunc': undefined,
+        'price': 100,
       },
       'goblin ear' : {
         'type': 'special',
@@ -88,6 +94,7 @@ angular.module('textRPG').
         'badUseFunc': function(){
           mainService.addEntry(this.badUseText);
         },
+        'price': 20,
       },
       'rock' : {
         'type': 'special',
@@ -100,6 +107,7 @@ angular.module('textRPG').
           mainService.addEntry(this.useText);
         },
         'badUseFunc': undefined,
+        'price': 0,
       },
       'troll tooth' : {
         'type': 'special',
@@ -112,6 +120,7 @@ angular.module('textRPG').
           mainService.addEntry(this.useText);
         },
         'badUseFunc': undefined,
+        'price': 100,
       },
       'golden key' : {
         'type': 'special',
@@ -128,6 +137,7 @@ angular.module('textRPG').
         'badUseFunc': function(){
           mainService.addEntry(this.badUseText);
         },
+        'price': 0,
       },
     }
   }])
