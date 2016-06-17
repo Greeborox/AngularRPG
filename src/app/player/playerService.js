@@ -3,9 +3,10 @@ angular.module('textRPG').
     // State vars
     var self = this;
     this.level = 1;
+    this.experience = {'curr': 0, 'tillNext': 50}
     this.hp = 10;
     this.maxHp = 10;
-    this.strength = 10;
+    this.stats = {'strength':10,'speed':10};
     this.items = itemsService.items;
     this.currentLocation = 'start';
     this.direction = undefined;
@@ -111,15 +112,30 @@ angular.module('textRPG').
       }
     }
 
+    this.grantLevel = function(){
+      this.level += 1;
+      var strBonus = Math.floor(Math.random() * (6 - 2) + 2);
+      var speedBonus = Math.floor(Math.random() * (6 - 2) + 2);
+      var healthBonus = Math.floor(Math.random() * (10 - 5) + 5);
+      mainService.addEntry("Congratulations! You have reached level "+this.level);
+      mainService.addEntry("You gain "+strBonus+" points of strenght and "+speedBonus+" points of speed.");
+      mainService.addEntry("You gain "+healthBonus+" points of maximum health points.");
+      this.stats.strength += strBonus;
+      this.stats.speed += speedBonus;
+      this.maxHp += healthBonus;
+      this.experience.tillNext = this.experience.tillNext*3
+    }
+
     this.attackMonster = function(name,type){
       var dmg = Math.floor(Math.random() * (this.items[this.equiped.weapon].maxDmg - this.items[this.equiped.weapon].minDmg) + this.items[this.equiped.weapon].minDmg);
-      mainService.addEntry("You deal "+dmg+" damage to the "+(type));
-      roomService.hurtMonster(dmg,this.currentLocation,this.attacking.name);
-      console.log(dmg);
+      var bonusDmg = Math.floor(this.stats.strength/10)
+      mainService.addEntry("You deal "+(dmg+bonusDmg)+" damage to the "+(type));
+      roomService.hurtMonster(dmg+bonusDmg,this.currentLocation,this.attacking.name);
+      roomService.makeMonstersAggresive(this.currentLocation);
     }
 
     this.walk = function(direction){
-      this.currActionLength = 100;
+      this.currActionLength = 50;
       this.direction = direction;
       this.performingAction = true;
       this.currentAction = 'walking';
@@ -226,6 +242,9 @@ angular.module('textRPG').
           }
         }
         self.usingReady = false;
+      }
+      if(this.experience.curr > this.experience.tillNext){
+        this.grantLevel();
       }
     }
 

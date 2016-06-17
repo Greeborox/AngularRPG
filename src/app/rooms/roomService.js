@@ -22,12 +22,22 @@ angular.module('textRPG').
       return this.announceKill;
     }
 
+    this.makeMonstersAggresive = function(room){
+      for (var i = 0; i < this.rooms[room].monsters.length; i++) {
+        var currMonster = this.rooms[room].monsters[i];
+        if(currMonster.attitude != 'aggresive'){
+          currMonster.attitude ='aggresive';
+        }
+      }
+    }
+
     this.spawnMonsters = function(room){
       var currRoom = this.rooms[room];
       if(currRoom.encounters.length > 0){
         for (var i = 0; i < currRoom.encounters.length; i++) {
           var currEncounter = currRoom.encounters[i];
           if(!currEncounter.unique || (currEncounter.unique && !monstersService.uniqesKilled[currEncounter.type])){
+            console.log(currEncounter.unique);
             if(Math.random() < currEncounter.chance){
               var monsterNum = Math.floor(Math.random() * (currEncounter.max - currEncounter.min) + currEncounter.min);
               for (var j = 0; j < monsterNum; j++) {
@@ -50,6 +60,7 @@ angular.module('textRPG').
           if(currMonster.unique){
             var monsterType = currMonster.type;
             monstersService.uniqesKilled[monsterType] = true;
+            console.log(monstersService.uniqesKilled);
           }
         }
       }
@@ -92,7 +103,7 @@ angular.module('textRPG').
         'west': 'deepForest',
         'encounters': [],
         'monsters': [],
-        'items': ['magic ring','health potion'],
+        'items': ['health potion'],
       },
       'foxDen': {
         'description': 'You enter a small groove. You can see a family of foxes playing in the grass. The hide quickly under a giant tree, the second the notice you',
@@ -115,7 +126,7 @@ angular.module('textRPG').
         'items': [],
       },
       'oldOak': {
-        'description': 'You reach a big groove in the thick woods. There is an old tree in the middle. It emmits an erie energy. You feel like you are being watched',
+        'description': 'You reach a big groove in the thick woods. There is an old oak in the middle. It emmits an erie energy. You feel like you are being watched. You notice a a small fountain under the tree. You take a sip of the water. It is very refreshing. You can feel your life forces come back to you.',
         'north': undefined,
         'east': 'forestPathCont',
         'south': 'deepForest',
@@ -123,9 +134,10 @@ angular.module('textRPG').
         'encounters': [],
         'monsters': [],
         'items': [],
+        'isFountain': true,
       },
       'forestPathCont': {
-        'description': 'The forest path turns to the east, The forest around becomes more dense',
+        'description': 'The forest path turns to the east, The forest around becomes more dense. There is a merchant\'s caravan here. He invites you to check his wares.',
         'north': undefined,
         'east': 'forestPathEnd',
         'south': 'forestPath',
@@ -227,9 +239,9 @@ angular.module('textRPG').
         'items': [],
       },
       'oldWell': {
-        'description': 'An old well is located in this part of the swamp. Eerie light emanates from the mosscovered stones. You look down the well, but see only darkness.',
+        'description': 'An old well is located in this part of the swamp. Eerie light emanates from the mosscovered stones. You look down the well, but see only darkness. You can see a railing in the distance to the east.',
         'north': 'genericSwamp4',
-        'east': undefined,
+        'east': 'cemetaryGate',
         'south': 'rusalkaLair',
         'west': 'swampCenter',
         'encounters': [{'type':'goblin','chance':0.7,'min':1,'max':3}],
@@ -266,7 +278,135 @@ angular.module('textRPG').
         'monsters': [],
         'items': [],
       },
+      'cemetaryGate': {
+        'description': 'You reach a fence standing across the swamp, There is a gate nearby, A path starts at the gate and leads further east. You see torches burning along the path. Who tends to the fire, you wonder.',
+        'north': undefined,
+        'east': 'genericCemetary1',
+        'south': undefined,
+        'west': 'oldWell',
+        'encounters': [],
+        'monsters': [],
+        'items': [],
+      },
+      'genericCemetary1': {
+        'description': 'You reach the end of the path. You are on and old, abandoned cemetary. Ruined graves and mausoleoums surround you. You can see a large strucuture looming in the south-east.',
+        'north': undefined,
+        'east': 'genericCemetary2',
+        'south': 'genericCemetary3',
+        'west': 'cemetaryGate',
+        'encounters': [{'type':'skeleton','chance':0.5,'min':1,'max':1},{'type':'zombie','chance':0.3,'min':1,'max':1}],
+        'monsters': [],
+        'items': [],
+      },
+      'genericCemetary2': {
+        'description': 'The cemetary looks dark and menacing. Rubble from falen monuments scatter the ground. When you look to the south, you notice a strange figure in the sky.',
+        'north': undefined,
+        'east': undefined,
+        'south': 'gargoyleLair',
+        'west': 'genericCemetary1',
+        'encounters': [{'type':'skeleton','chance':0.5,'min':1,'max':1},{'type':'zombie','chance':0.3,'min':1,'max':1}],
+        'monsters': [],
+        'items': [],
+      },
+      'genericCemetary3': {
+        'description': 'As you go deeper into the abondened cemetary, the feeling of dread starts overwhelming you. Strange sounds come from the darkness, almost like someone was whispering your name.',
+        'north': 'genericCemetary1',
+        'east': 'gargoyleLair',
+        'south': 'courtyardOfBones',
+        'west': undefined,
+        'encounters': [{'type':'skeleton','chance':0.5,'min':1,'max':1},{'type':'zombie','chance':0.3,'min':1,'max':1}],
+        'monsters': [],
+        'items': [],
+      },
+      'gargoyleLair': {
+        'description': 'A tall monument stands in this part of the cemetary. You can see gargoyles sitting at its top. They look very lifelike',
+        'north': 'genericCemetary2',
+        'east': undefined,
+        'south': 'genericCemetary4',
+        'west': 'genericCemetary3',
+        'encounters': [{'type':'gargoyle','chance':1,'min':1,'max':1,'unique':true}],
+        'monsters': [],
+        'items': [],
+      },
+      'courtyardOfBones': {
+        'description': 'You enter a small courtyard. It seems the darkness here is even more dense then in the res of the cemetary. As your eyes get used to it, you see that the ground here is covered with human bones.',
+        'north': 'genericCemetary3',
+        'east': 'genericCemetary4',
+        'south': undefined,
+        'west': undefined,
+        'encounters': [{'type':'skeleton','chance':0.7,'min':3,'max':5}],
+        'monsters': [],
+        'items': [],
+      },
+      'genericCemetary4': {
+        'description': 'You reach the base of the looming structure. It seems it is a monolithic mausoleum. Huge iron door block your way inside.',
+        'north': 'gargoyleLair',
+        'east': undefined,
+        'south': undefined,
+        'west': 'courtyardOfBones',
+        'encounters': [{'type':'skeleton','chance':0.5,'min':1,'max':1},{'type':'zombie','chance':0.3,'min':1,'max':1}],
+        'monsters': [],
+        'items': [],
+      },
+      'cryptEntrance': {
+        'description': 'You enter the mausoleum. There is a long flight of stairs just behinf the entry. It takes you deep underground. The smell of meldow and decay is overwhelming. Torches lit the stone halls. A corridor leads east.',
+        'north': undefined,
+        'east': 'cryptCorridor1',
+        'south': undefined,
+        'west': 'genericCemetary4',
+        'encounters': [],
+        'monsters': [],
+        'items': [],
+      },
+      'cryptCorridor1': {
+        'description': 'You carefuly follow the corridor. Green moss cover the age old stones. There is a passage to the north from here, or you can keep following the corridor east. Strange gurgling sounds come from the north',
+        'north': 'bloodRoom',
+        'east': 'cryptCorridor2',
+        'south': undefined,
+        'west': 'cryptEntrance',
+        'encounters': [{'type':'skeleton','chance':0.5,'min':1,'max':1},{'type':'ghoul','chance':0.3,'min':1,'max':1}],
+        'monsters': [],
+        'items': [],
+      },
+      'bloodRoom': {
+        'description': 'You enter a small room. It is empty except for a giant wooden tub in the middle. It is filled with blood! You swear you saw something emerging from the blood but when you came nearer it hid under the surface.',
+        'north': undefined,
+        'east': undefined,
+        'south': 'cryptCorridor1',
+        'west': undefined,
+        'encounters': [{'type':'ghoul','chance':0.8,'min':2,'max':4}],
+        'monsters': [],
+        'items': [],
+      },
+      'cryptCorridor2': {
+        'description': 'The corridor turns north here. Old emblems and tapestried decorate the wall here. A noble family must be buried in this tomb. But where are the graves?',
+        'north': 'giantStairs',
+        'east': undefined,
+        'south': undefined,
+        'west': 'cryptCorridor1',
+        'encounters': [{'type':'skeleton','chance':0.5,'min':1,'max':1},{'type':'ghoul','chance':0.3,'min':1,'max':1}],
+        'monsters': [],
+        'items': [],
+      },
+      'giantStairs': {
+        'description': 'Another flight of stairs opens before you. This time the walk is much longer. You must be very deep. At the bottom of the stairs there is a corridor leading east. You can hear fire roaring from that direction.',
+        'north': undefined,
+        'east': 'vampireLordsLair',
+        'south': 'cryptCorridor1',
+        'west': undefined,
+        'encounters': [{'type':'skeleton','chance':0.5,'min':1,'max':1},{'type':'ghoul','chance':0.3,'min':1,'max':1}],
+        'monsters': [],
+        'items': [],
+      },
+      'vampireLordsLair': {
+        'description': 'You enter a brightly lit room. It is decorated with splendor and luxury. A huge fireplace is located at the eastern wall. A magical, smokeless fire roars in it. A coffin stands in the middle of the room. It is open.',
+        'north': undefined,
+        'east': undefined,
+        'south': undefined,
+        'west': 'giantStairs',
+        'encounters': [{'type':'Vampire Lord','chance':1,'min':1,'max':1,'unique':true}],
+        'monsters': [],
+        'items': [],
+      },
     }
   }])
-
-  /**/

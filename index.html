@@ -49,7 +49,7 @@
               <p>buy:</p>
               <input ng-disabled="main.cannotAfford(item)" type="button" value="{{item}} / {{main.getHighPrice(item)}}" ng-repeat="item in main.getForSale() track by $index" ng-click="main.buy(item)">
               <p ng-hide="main.inventoryNotEmpty()">sell:</p>
-              <input ng-hide="main.inventoryNotEmpty()" type="button" value="{{item.name}} / {{main.getPrice(item.name)}}" ng-repeat="item in main.player.inventory track by $index" ng-click="main.sell(item.name)"">
+              <input ng-hide="main.getHighPrice(item.name) == 0" ng-hide="main.inventoryNotEmpty()" type="button" value="{{item.name}} / {{main.getPrice(item.name)}}" ng-repeat="item in main.player.inventory track by $index" ng-click="main.sell(item.name)"">
             </div>
           </div>
           <div>

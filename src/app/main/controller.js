@@ -31,7 +31,6 @@ angular.module('textRPG')
     }
 
     this.buy = function(item){
-      console.log('buy ',item);
       if(this.player.has(item)){
         this.player.inventory[item].amount += 1;
       } else {
@@ -128,7 +127,7 @@ angular.module('textRPG')
             this.add(currMonster.type+' is attacking! It deals '+monsterDmg+ ' damage');
           }
           currMonster.attacking = false;
-          this.player.hp -= monsterDmg;
+          this.player.hp -= Math.max(monsterDmg,0);
         }
       }
     }
@@ -194,6 +193,11 @@ angular.module('textRPG')
       this.add(this.rooms[this.player.currentLocation].description);
     }
 
+    this.grantExp = function(exp) {
+      this.add("You gain " + exp + " experience points.")
+      this.player.experience.curr += exp;
+    }
+
     this.update = function(){
       self.player.update();
       if(self.mainService.toHealPlayer){
@@ -211,14 +215,18 @@ angular.module('textRPG')
           self.roomService.spawnMonsters(self.player.currentLocation);
         }
         self.emmitMessage();
+        if(self.rooms[self.player.currentLocation].isFountain){
+          self.mainService.toHealPlayer = true;
+        }
         self.roomService.setAnnounce(false);
       }
       if(self.roomService.getKillAnnounce()){
         self.add('You slay the '+self.player.attacking.type+'!');
-        self.player.attacking = undefined;
         if(!self.rooms[self.player.currentLocation].monsters.length == 0){
           self.add(self.listMonsters());
         }
+        self.grantExp(self.player.attacking.expValue);
+        self.player.attacking = undefined;
         self.roomService.setKillAnnounce(false);
       }
       if(self.roomService.itemsDropped.length > 0){

@@ -43,6 +43,48 @@ angular.module('textRPG').
         'minDmg': 1,
         'price': 50,
       },
+      'goblin spear': {
+        'type': 'equipment',
+        'spot': 'weapon',
+        'usableAt': undefined,
+        'oneTime': false,
+        'useText': undefined,
+        'badUseText': undefined,
+        'useFunc': undefined,
+        'baduseFunc': undefined,
+        'speed': 150,
+        'maxDmg': 5,
+        'minDmg': 2,
+        'price': 70,
+      },
+      'broad sword': {
+        'type': 'equipment',
+        'spot': 'weapon',
+        'usableAt': undefined,
+        'oneTime': false,
+        'useText': undefined,
+        'badUseText': undefined,
+        'useFunc': undefined,
+        'baduseFunc': undefined,
+        'speed': 120,
+        'maxDmg': 8,
+        'minDmg': 5,
+        'price': 170,
+      },
+      'vampire sword': {
+        'type': 'equipment',
+        'spot': 'weapon',
+        'usableAt': undefined,
+        'oneTime': false,
+        'useText': undefined,
+        'badUseText': undefined,
+        'useFunc': undefined,
+        'baduseFunc': undefined,
+        'speed': 200,
+        'maxDmg': 10,
+        'minDmg': 6,
+        'price': 470,
+      },
       'leather armour' : {
         'type': 'equipment',
         'spot': 'armor',
@@ -54,6 +96,42 @@ angular.module('textRPG').
         'baduseFunc': undefined,
         'defence': 2,
         'price': 20,
+      },
+      'scale armour' : {
+        'type': 'equipment',
+        'spot': 'armor',
+        'usableAt': undefined,
+        'oneTime': false,
+        'useText': undefined,
+        'badUseText': undefined,
+        'useFunc': undefined,
+        'baduseFunc': undefined,
+        'defence': 3,
+        'price': 120,
+      },
+      'iron mail armour' : {
+        'type': 'equipment',
+        'spot': 'armor',
+        'usableAt': undefined,
+        'oneTime': false,
+        'useText': undefined,
+        'badUseText': undefined,
+        'useFunc': undefined,
+        'baduseFunc': undefined,
+        'defence': 5,
+        'price': 420,
+      },
+      'vampire plate armour' : {
+        'type': 'equipment',
+        'spot': 'armor',
+        'usableAt': undefined,
+        'oneTime': false,
+        'useText': undefined,
+        'badUseText': undefined,
+        'useFunc': undefined,
+        'baduseFunc': undefined,
+        'defence': 10,
+        'price': 1420,
       },
       'magic ring' : {
         'type': 'equipment',
@@ -109,6 +187,32 @@ angular.module('textRPG').
         'badUseFunc': undefined,
         'price': 0,
       },
+      'ruby' : {
+        'type': 'special',
+        'spot': undefined,
+        'usableAt': 'all',
+        'oneTime': false,
+        'useText': 'This is a pretty gem. It must be worth a fortune.',
+        'badUseText': undefined,
+        'useFunc': function(){
+          mainService.addEntry(this.useText);
+        },
+        'badUseFunc': undefined,
+        'price': 500,
+      },
+      'piece of rotten flesh' : {
+        'type': 'special',
+        'spot': undefined,
+        'usableAt': 'all',
+        'oneTime': false,
+        'useText': 'YUCK!',
+        'badUseText': undefined,
+        'useFunc': function(){
+          mainService.addEntry(this.useText);
+        },
+        'badUseFunc': undefined,
+        'price': 0,
+      },
       'troll tooth' : {
         'type': 'special',
         'spot': undefined,
@@ -133,6 +237,38 @@ angular.module('textRPG').
           mainService.addEntry(this.useText);
           roomService.rooms.caveEntrance.north = 'trollCave';
           roomService.rooms.caveEntrance.description = 'The road leads up. You climb the rocky path and reach a big cave. Bones and rusty equipment lies scatterd around here. Dark smoke is coming out of the entrance.';
+        },
+        'badUseFunc': function(){
+          mainService.addEntry(this.badUseText);
+        },
+        'price': 0,
+      },
+      'mausoleum key' : {
+        'type': 'special',
+        'spot': undefined,
+        'usableAt': 'genericCemetary4',
+        'oneTime': true,
+        'useText': 'You use the key to open the gate.',
+        'badUseText': 'A key ornamented with bones. It must open something in the cemetary',
+        'useFunc': function(){
+          mainService.addEntry(this.useText);
+          roomService.rooms.genericCemetary4.east = 'cryptEntrance';
+          roomService.rooms.genericCemetary4.description = 'You reach the base of the looming structure. It seems it is a monolithic mausoleum. Huge iron door block are open.';
+        },
+        'badUseFunc': function(){
+          mainService.addEntry(this.badUseText);
+        },
+        'price': 0,
+      },
+      'flaming heart' : {
+        'type': 'special',
+        'spot': undefined,
+        'usableAt': 'icyCavern',
+        'oneTime': true,
+        'useText': '',
+        'badUseText': 'A strange object burning with magical flame, but cold to the touch.',
+        'useFunc': function(){
+
         },
         'badUseFunc': function(){
           mainService.addEntry(this.badUseText);
